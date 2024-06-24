@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MassTransit.RabbitMQ" Version="8.2.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.4.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
+		<PackageReference Include="SendGrid" Version="9.29.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Order.Application\Order.Application.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<EmbeddedResource Include="OrderService\email_template.html" />
+	</ItemGroup>
+</Project>

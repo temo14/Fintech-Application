@@ -1,0 +1,66 @@
+version: '3.4'
+
+services:
+  gateway.api:
+    environment:
+      ASPNETCORE_URLS: "https://+;http://+"
+      ASPNETCORE_HTTPS_PORTS: "5001"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "123"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/https/aspnetapp.pfx"
+      ConnectionStrings__DbConnectionString: Host=postgres;Port=5432;Database=Fintech;Username=postgres;Password=12345
+    ports:
+      - "5000:80"
+      - "5001:443"
+    volumes:
+      - ./certs/.aspnet/https:/https
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  identityservice.api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "https://+;http://+"
+      ASPNETCORE_HTTPS_PORTS: "6001"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "123"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/https/aspnetapp.pfx"
+      ConnectionStrings__DbConnectionString: Host=postgres;Port=5432;Database=Fintech;Username=postgres;Password=12345
+    ports:
+      - "6000:80"
+      - "6001:443"
+    volumes:
+      - ./certs/.aspnet/https:/https
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  orderservice.api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "https://+;http://+"
+      ASPNETCORE_HTTPS_PORTS: "7001"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "123"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/https/aspnetapp.pfx"
+      ConnectionStrings__DbConnectionString: Host=postgres;Port=5432;Database=Fintech;Username=postgres;Password=12345
+      EmailConfig__ApiKey: 
+    ports:
+      - "7000:80"
+      - "7001:443"
+    volumes:
+      - ./certs/.aspnet/https:/https
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  paymentservice.api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "https://+;http://+"
+      ASPNETCORE_HTTPS_PORTS: "8001"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "123"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/https/aspnetapp.pfx"
+      ConnectionStrings__DbConnectionString: Host=postgres;Port=5432;Database=Fintech;Username=postgres;Password=12345
+    ports:
+      - "8000:80"
+      - "8001:443"
+    volumes:
+      - ./certs/.aspnet/https:/https
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

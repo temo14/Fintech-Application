@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <title>Computed Orders</title>
+    <style type="text/css" media="screen">
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            font-family: 'Muli', Arial, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 55px 0;
+        }
+
+        .card {
+            background-color: #12325c;
+            border-radius: 26px 26px 0 0;
+            padding: 60px 30px;
+            color: #ffffff;
+        }
+
+        .h1 {
+            font-size: 40px;
+            line-height: 46px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .text-center {
+            font-size: 16px;
+            line-height: 30px;
+            text-align: center;
+            color: #c1cddc;
+            margin-bottom: 25px;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+            .order-table th, .order-table td {
+                border: 1px solid #c1cddc;
+                padding: 10px;
+                text-align: left;
+                color: #ffffff;
+            }
+
+            .order-table th {
+                background-color: #1a4980;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="h1">Hello, [companyName]</h1>
+            <p class="text-center">Your orders have been computed. Here's the summary:</p>
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Currency</th>
+                        <th>Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    [orderRows]
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

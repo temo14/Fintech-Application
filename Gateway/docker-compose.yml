@@ -1,0 +1,73 @@
+version: '3.4'
+
+services:
+  gateway.api:
+    image: ${DOCKER_REGISTRY-}gatewayapi
+    build:
+      context: .
+      dockerfile: Gateway.Api/Dockerfile
+    networks:
+      - fintech
+
+  identityservice.api:
+    image: ${DOCKER_REGISTRY-}identityserviceapi
+    build:
+      context: ..
+      dockerfile: IdentityService/Identity.Api/Dockerfile
+    networks:
+      - fintech
+
+  orderservice.api:
+    image: ${DOCKER_REGISTRY-}orderserviceapi
+    build:
+      context: ..
+      dockerfile: OrderService/Order.Api/Dockerfile
+    networks:
+      - fintech
+
+  paymentservice.api:
+    image: ${DOCKER_REGISTRY-}paymentserviceapi
+    build:
+      context: ..
+      dockerfile: PaymentService/Payment.Api/Dockerfile
+    networks:
+      - fintech
+ 
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: Fintech
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - fintech
+
+  fintec-mq:
+    image: rabbitmq:3.11.7-management
+    container_name: queue
+    hostname: fintech-queue
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - fintech
+
+  Orders.cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - fintech
+
+networks:
+  fintech:
+    name: fintech
+    driver: bridge
