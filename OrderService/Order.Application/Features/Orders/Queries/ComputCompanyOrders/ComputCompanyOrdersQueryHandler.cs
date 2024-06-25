@@ -16,30 +16,30 @@ internal class ComputCompanyOrdersQueryHandler(
 {
     public async Task<Result<object>> Handle(ComputCompanyOrdersQuery request, CancellationToken cancellationToken)
     {
-        var companyOrders = await repository.GetOrdersByCompanyAsync(request.CompanyId);
-
-        if (companyOrders is null)
-            throw new Exception("Orders doesnot exists");
-
         var cacheKey = $"company-{request.CompanyId}";
-
         var cachedData = cacheService.GetCachedData<List<ComputeOrdersResponse>>(cacheKey);
 
-        if (cachedData == null)
+        if (cachedData != null)
         {
-            _ = Task.Run(() => orderService.ComputeOrdersAndNotifyAsync(new OrderComputeRequest(
-                companyOrders,
-                cacheKey,
-                request.Token,
-                cacheService)));
-
-            var inProgresResponse = new ComputeInProgressResponse(
-                OrderStatus: "In Progress",
-                Message: "Your order is in progress and you will receive an email with all details when processing completes.");
-
-            return Result<object>.Success(inProgresResponse, StatusCodes.Status202Accepted);
+            return Result<object>.Success(cachedData);
         }
 
-        return Result<object>.Success(cachedData);
+        var companyOrders = await repository.GetOrdersByCompanyAsync(request.CompanyId);
+        if (companyOrders == null || !companyOrders.Any())
+        {
+            throw new Exception($"No orders found for company - {request.CompanyId}");
+        }
+
+        _ = Task.Run(() => orderService.ComputeOrdersAndNotifyAsync(new OrderComputeRequest(
+            companyOrders,
+            cacheKey,
+            request.Token,
+            cacheService)));
+
+        var inProgresResponse = new ComputeInProgressResponse(
+            OrderStatus: "In Progress",
+            Message: "Your order is in progress and you will receive an email with all details when processing completes.");
+
+        return Result<object>.Success(inProgresResponse, StatusCodes.Status202Accepted);
     }
 }

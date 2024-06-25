@@ -27,10 +27,13 @@ internal class OrderService(
 
     public async Task ComputeOrdersAndNotifyAsync(OrderComputeRequest request)
     {
+        if (!processingRequests.TryAdd(request.CacheKey, true))
+        {
+            return;
+        }
+
         try
         {
-            if (!processingRequests.TryAdd(request.CacheKey, true)) return;
-
             var delay = Task.Delay(TimeSpan.FromMinutes(2));
 
             var computedResults = request.Orders.GroupBy(o => o.currency).Select(group => new ComputeOrdersResponse
@@ -53,6 +56,10 @@ internal class OrderService(
         {
             logger.LogInformation($"ComputeOrdersAndNotifyAsync error - {ex.Message}");
             throw;
+        }
+        finally
+        {
+            processingRequests.TryRemove(request.CacheKey, out _);
         }
     }
 
